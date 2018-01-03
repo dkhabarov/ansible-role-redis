@@ -1,0 +1,6 @@
+---
+
+ansible_role_redis: present
+
+#redis_sysctl:
+#  - {key: vm.overcommit_memory, value: 1}

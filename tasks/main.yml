@@ -1,0 +1,6 @@
+---
+- include: install.yml
+  when: ansible_role_redis == 'present'
+
+- include: uninstall.yml
+  when: ansible_role_redis == 'absent'

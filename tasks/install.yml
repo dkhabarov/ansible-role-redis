@@ -1,0 +1,27 @@
+---
+- name: install redis
+  apt:
+    pkg: redis-server
+  when: ansible_pkg_mgr == 'apt'
+
+- name: set sysctl
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: "{{ item.state|default('present') }}"
+    sysctl_set: yes
+    reload: yes
+  with_items: "{{ redis_sysctl }}"
+  when: redis_sysctl is defined
+
+- name: install redis.conf
+  template:
+    src: "{{ item }}"
+    dest: "/etc/redis/redis.conf"
+    owner: redis
+    group: redis
+    mode: 0640
+  with_first_found:
+    - "../../host_templates/{{ inventory_hostname }}/etc/redis/redis.conf"
+    - "templates/etc/redis/redis.conf.j2"
+  notify: restart redis-server

@@ -1,0 +1,14 @@
+---
+- name: uninstall redis
+  apt:
+    pkg: redis-server
+    state: absent
+  when: ansible_pkg_mgr == 'apt'
+
+- name: uninstall redis.conf
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_first_found:
+    - "../../host_templates/{{ inventory_hostname }}/etc/redis/redis.conf"
+    - "templates/etc/redis/redis.conf.j2"
